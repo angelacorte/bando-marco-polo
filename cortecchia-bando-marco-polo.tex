@@ -1,0 +1,221 @@
+% This is samplepaper.tex, a sample chapter demonstrating the
+% LLNCS macro package for Springer Computer Science proceedings;
+% Version 2.21 of 2022/01/12
+%
+\documentclass[runningheads]{llncs}
+\usepackage[inline]{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{geometry}
+\geometry{a4paper, left=25mm, right=25mm, top=25mm, bottom=25mm}
+
+% \usepackage{fontspec}
+%
+\usepackage[T1]{fontenc}
+% T1 fonts will be used to generate the final print and online PDFs,
+% so please use T1 fonts in your manuscript whenever possible.
+% Other font encondings may result in incorrect characters.
+%
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{acronym}
+\usepackage{cleveref}
+% Workaround for: https://tex.stackexchange.com/q/737204/2388
+\makeatletter
+\AtBeginDocument
+{
+    \def\ltx@label#1{\cref@label{#1}}%add braces
+    \def\label@in@display@noarg#1{\cref@old@label@in@display{#1}}%remove braces
+    \def\label@in@mmeasure@noarg#1{%
+    \begingroup%
+    \measuring@false%
+    \cref@old@label@in@display{#1}%remove braces for multline, see https://tex.stackexchange.com/q/737204/2388
+    \endgroup
+}%
+} %
+\makeatother
+
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+%
+% If you use the hyperref package, please uncomment the following two lines
+% to display URLs in blue roman font according to Springer's eBook style:
+%\usepackage{color}
+%\renewcommand\UrlFont{\color{blue}\rmfamily}
+%
+\newenvironment{inlinelist}{\begin{enumerate*}[label=\emph{(\roman*)}]}{\end{enumerate*}}
+
+\acrodef{AP}{Aggregate Programming}
+\acrodef{ac}[AC]{Aggregate Computing}
+\acrodef{API}{Application Programming Interface}
+\acrodef{dsl}[DSL]{domain-specific language}
+\acrodef{fc}[FC]{Field Calculus}
+\acrodefplural{FC}[FC]{field calculi}
+\acrodef{HOFC}{Higher-Order \acl{FC}}
+\acrodef{id}[ID]{identifier}
+\acrodef{IoT}{Internet of Things}
+\acrodef{JVM}{Java Virtual Machine}
+\acrodef{scr}[SCR]{self-organising coordination regions}
+\acrodef{TOTA}{Tuples On The Air}
+\acrodef{VMC}{Vascular Morphogenesis Controller}
+\acrodef{cos}[COS]{Collective Operating System}
+\acrodef{cas}[CAS]{Collective Adaptive Systems}
+
+\begin{document}
+
+    \begin{titlepage}
+        \centering
+        \vspace*{2cm}
+
+        {\scshape\large PhD Programme in Computer Science and Engineering \par}
+        \vspace{0.5cm}
+        {\scshape\large Cycle XL \par}
+        \vspace{0.5cm}
+
+        \rule{\linewidth}{0.4mm} \\ [0.1mm]
+        \raisebox{0.2cm}{\rule{\linewidth}{0.8mm}} \\[0.8cm]
+        {\large\bfseries PhD Period Abroad Proposal for Marco Polo \par}
+        \vspace{0.8cm}
+        {\LARGE Integration of Control Barrier Functions for Safety-Critical Guarantees in Aggregate Computing\par}
+
+        \vspace{1.5cm}
+
+        \noindent
+        \begin{minipage}[t]{0.3\textwidth}
+            \raggedright
+            \textbf{Supervisors:}\\[0.5cm]
+            Prof. Danilo Pianini\\
+            Prof. Mirko Viroli\\
+            Prof. Enrico Gallinucci
+        \end{minipage}%
+        \hfill
+        \begin{minipage}[t]{0.3\textwidth}
+            \centering
+            \textbf{Abroad Supervisor:}\\[0.5cm]
+            Prof. Alessandro Vittorio Papadopoulos\\
+        \end{minipage}
+        \begin{minipage}[t]{0.3\textwidth}
+            \raggedleft
+            \textbf{PhD Student:}\\[0.5cm]
+            Angela Cortecchia
+        \end{minipage}
+
+        \vspace{1.5cm}
+
+        \rule{\linewidth}{0.8mm} \\ [0.1pt]
+        \raisebox{0.2cm}{\rule{\linewidth}{0.4mm}} \\[1.5cm]
+
+    \end{titlepage}
+
+    \section*{Proposal}
+
+    \subsection*{Context}\label{subsec:context}
+
+    \ac{cas} are ensembles of distributed devices, such as sensors, actuators, and robots,
+    that cooperate to achieve global goals under dynamic and unpredictable conditions~\cite{DBLP:conf/huc/Ferscha15}.
+%
+    Programming such systems is inherently challenging,
+    as it must address scalability, device heterogeneity,
+    and continuous adaptation to changing contexts.
+%
+    Several approaches have been proposed to alleviate this complexity.
+%
+    In particular,
+    macroprogramming techniques~\cite{casadei22} raise the level of abstraction,
+    allowing developers to specify the behavior of the system at a collective level
+    rather than managing interactions of individual devices.
+%
+    A foundational step in this direction is the \emph{\ac{fc}}~\cite{JLAMP2019,TOCL2019},
+    a formal model for programming collective behaviors through \emph{computational fields},
+    which map values over space and time and enable composable definitions of self-organizing processes.
+
+    Building on these ideas,
+    \ac{ac}~\cite{BealIEEEComputer2015} introduces a functional programming model that supports the compositional development of self-adaptive collective services.
+    %
+    Here,
+    the focus of computation shifts from individual devices to collaborative groups,
+    enabling concise and modular expression of complex adaptive behaviors.
+    %
+    Despite its expressive power, classical approaches often model a single aggregate program.
+    %
+    Recent work on \emph{aggregate processes}~\cite{Coordination2019-processes}
+    extends this view by introducing primitive constructs to manage multiple concurrent aggregate computations.
+    %
+    This is crucial in practice,
+    where multiple processes must coexist, overlap, and evolve in parallel,
+    each involving different subsets of devices and spanning distinct spatial and temporal regions.
+    %
+    Such scenarios call for abstractions and mechanisms that are still only partially addressed in the current state of the art.
+
+    Existing \ac{ac} techniques can adapt to failures, network partitions, and topology changes,
+    but they provide only limited support for maintaining non-monotonic global states without centralized control,
+    and for organizing the system into subsystems with independent behaviors and goals.
+    %
+    Morphogenetic algorithms address part of this gap:
+    inspired by biological development,
+    they create complex structures and patterns from simple local interactions~\cite{DBLP:books/daglib/p/Beal12,DBLP:conf/gecco/MorganC13,DBLP:conf/gecco/ZahadatHS17},
+    with applications in modular and swarm robotics or self-assembling systems.
+
+    For global state maintenance,
+    gossip algorithms are widely used to exchange information and reach consensus in decentralized settings.
+%
+    However,
+    traditional gossip algorithms are not self-stabilizing:
+    after transient faults or topology changes,
+    they may fail to converge to a correct state.
+%
+    In \ac{ac},
+    this has been partially addressed with replication mechanisms~\cite{PianiniCoordination2016},
+    where multiple gossip instances are run per node.
+%
+    While this eventually enforces consistency,
+    it introduces delays and risks contaminating new computations with obsolete values.
+
+    To address these challenges,
+    this project proposes a \textbf{\ac{cos}}:
+    an execution and management environment for aggregate processes
+    that extends aggregate computing with concepts from operating systems.
+%
+    Much like a traditional OS manages processes, users, and resources on a single machine~\cite{DBLP:journals/csur/TanenbaumR85},
+    the COS is envisioned as middleware capable of coordinating multiple aggregate programs distributed across heterogeneous devices.
+%
+    The research investigates how OS notions---such as users and permissions, signals and interrupts,
+    inter-process communication, and resource management---can be reinterpreted in a collective and distributed context.
+
+    In this vision,
+    users and permissions correspond to roles and rights distributed across devices and human actors,
+    signals and interrupts affect entire spatial regions instead of single execution threads,
+    and inter-process communication goes beyond shared memory or message passing,
+    enabling coordination among distributed and possibly non-contiguous regions.
+%
+    The project also aims to address distributed sensing and actuation,
+    where heterogeneous devices can be abstracted into logical collective sensors and actuators,
+    thus enabling high-level sensor fusion~\cite{DBLP:journals/arc/Sasiadek02},
+    and morphogenetic applications within the \ac{ac} paradigm,
+    to support the emergence of complex structures and behaviors from local interactions.
+
+    The proposed \ac{cos} will therefore act as unifying middleware that manages concurrent aggregate processes,
+    provides mechanisms for permissions and communication,
+    and supports deployment on heterogeneous infrastructures.
+%
+    By integrating advances in aggregate programming frameworks such as Collektive,
+    the COS aims to offer a robust, adaptive,
+    and general-purpose environment for programming Collective Adaptive Systems.
+%
+    The expected contribution is a novel paradigm bridging aggregate computing and distributed operating system principles,
+    enabling more powerful, flexible,
+    and reliable collective applications in domains such as crowd management, autonomous navigation, and smart cities.
+
+    \section*{Opportunities and Challenges}
+
+
+
+    \subsection*{Research Gap}
+
+    \subsection*{Research Plan}
+
+
+    \bibliographystyle{alpha}
+    \bibliography{bibliography}
+
+\end{document}
