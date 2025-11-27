@@ -60,6 +60,8 @@
 \acrodef{VMC}{Vascular Morphogenesis Controller}
 \acrodef{cos}[COS]{Collective Operating System}
 \acrodef{cas}[CAS]{Collective Adaptive Systems}
+\acrodef{clf}[CLF]{Control Lyapunov Function}
+\acrodef{cbf}[CBF]{Control Barrier Function}
 
 \begin{document}
 
@@ -111,109 +113,95 @@
 
     \subsection*{Context}\label{subsec:context}
 
-    \ac{cas} are ensembles of distributed devices, such as sensors, actuators, and robots,
-    that cooperate to achieve global goals under dynamic and unpredictable conditions~\cite{DBLP:conf/huc/Ferscha15}.
-%
+    \ac{cas} are ensembles of distributed devices—such as sensors,
+    actuators, and robots—that cooperate to achieve global goals under dynamic and unpredictable conditions~\cite{DBLP:conf/huc/Ferscha15}.
+    %
     Programming such systems is inherently challenging,
-    as it must address scalability, device heterogeneity,
-    and continuous adaptation to changing contexts.
-%
-    Several approaches have been proposed to alleviate this complexity.
-%
-    In particular,
-    macroprogramming techniques~\cite{casadei22} raise the level of abstraction,
-    allowing developers to specify the behavior of the system at a collective level
-    rather than managing interactions of individual devices.
-%
-    A foundational step in this direction is the \emph{\ac{fc}}~\cite{JLAMP2019,TOCL2019},
-    a formal model for programming collective behaviors through \emph{computational fields},
-    which map values over space and time and enable composable definitions of self-organizing processes.
+    as it requires addressing scalability,
+    device heterogeneity,
+    and continuous adaptation to changing contexts~\cite{BealIEEEComputer2015}.
+    %
+    To alleviate this complexity, macroprogramming techniques like \ac{ac} have been proposed to raise the level of abstraction,
+    allowing developers to specify the behavior of the system at a collective level rather than managing the interactions of individual devices~\cite{DBLP:journals/csur/Casadei23}.
 
-    Building on these ideas,
-    \ac{ac}~\cite{BealIEEEComputer2015} introduces a functional programming model that supports the compositional development of self-adaptive collective services.
+    In this paradigm,
+    the focus of computation shifts from individual nodes to collaborative groups,
+    enabling the concise expression of complex self-organizing behaviors~\cite{JLAMP2019}.
     %
-    Here,
-    the focus of computation shifts from individual devices to collaborative groups,
-    enabling concise and modular expression of complex adaptive behaviors.
-    %
-    Despite its expressive power, classical approaches often model a single aggregate program.
-    %
-    Recent work on \emph{aggregate processes}~\cite{Coordination2019-processes}
-    extends this view by introducing primitive constructs to manage multiple concurrent aggregate computations.
-    %
-    This is crucial in practice,
-    where multiple processes must coexist, overlap, and evolve in parallel,
-    each involving different subsets of devices and spanning distinct spatial and temporal regions.
-    %
-    Such scenarios call for abstractions and mechanisms that are still only partially addressed in the current state of the art.
-
-    Existing \ac{ac} techniques can adapt to failures, network partitions, and topology changes,
-    but they provide only limited support for maintaining non-monotonic global states without centralized control,
-    and for organizing the system into subsystems with independent behaviors and goals.
-    %
-    Morphogenetic algorithms address part of this gap:
-    inspired by biological development,
-    they create complex structures and patterns from simple local interactions~\cite{DBLP:books/daglib/p/Beal12,DBLP:conf/gecco/MorganC13,DBLP:conf/gecco/ZahadatHS17},
-    with applications in modular and swarm robotics or self-assembling systems.
-
-    For global state maintenance,
-    gossip algorithms are widely used to exchange information and reach consensus in decentralized settings.
-%
     However,
-    traditional gossip algorithms are not self-stabilizing:
-    after transient faults or topology changes,
-    they may fail to converge to a correct state.
-%
-    In \ac{ac},
-    this has been partially addressed with replication mechanisms~\cite{PianiniCoordination2016},
-    where multiple gossip instances are run per node.
-%
-    While this eventually enforces consistency,
-    it introduces delays and risks contaminating new computations with obsolete values.
+    traditional \ac{ac} approaches primarily ensure eventual consistency through self-stabilization~\cite{TOMACS2018};
+    this means the system will recover after a fault, but it does not guarantee safety while the recovery is taking place.
 
-    To address these challenges,
-    this project proposes a \textbf{\ac{cos}}:
-    an execution and management environment for aggregate processes
-    that extends aggregate computing with concepts from operating systems.
-%
-    Much like a traditional OS manages processes, users, and resources on a single machine~\cite{DBLP:journals/csur/TanenbaumR85},
-    the COS is envisioned as middleware capable of coordinating multiple aggregate programs distributed across heterogeneous devices.
-%
-    The research investigates how OS notions---such as users and permissions, signals and interrupts,
-    inter-process communication, and resource management---can be reinterpreted in a collective and distributed context.
+    To address this,
+    the research looks toward Control Theory,
+    which offers formal methods to specify system behavior.
+    %
+    Specifically, \ac{clf} provide a certification that a system will continuously move towards a desired goal,
+    ensuring stability, while \ac{cbf} act as ``virtual walls'',
+    guaranteeing that the system never violates specific safety constraints during its operation~\cite{DBLP:journals/ieeejas/LiWYWH23}.
 
-    In this vision,
-    users and permissions correspond to roles and rights distributed across devices and human actors,
-    signals and interrupts affect entire spatial regions instead of single execution threads,
-    and inter-process communication goes beyond shared memory or message passing,
-    enabling coordination among distributed and possibly non-contiguous regions.
-%
-    The project also aims to address distributed sensing and actuation,
-    where heterogeneous devices can be abstracted into logical collective sensors and actuators,
-    thus enabling high-level sensor fusion~\cite{DBLP:journals/arc/Sasiadek02},
-    and morphogenetic applications within the \ac{ac} paradigm,
-    to support the emergence of complex structures and behaviors from local interactions.
+    The integration of these concepts is envisioned within \ac{cos}:
+    a middleware capable of coordinating distributed processes and resources,
+    extending the concepts of traditional distributed operating systems~\cite{DBLP:journals/csur/TanenbaumR85}.
+    %
+    By embedding CLF and CBF principles into the \ac{cos},
+    the aim is to create an environment that manages not just the execution of collective code,
+    but also the physical safety and stability of the underlying devices.
 
-    The proposed \ac{cos} will therefore act as unifying middleware that manages concurrent aggregate processes,
-    provides mechanisms for permissions and communication,
-    and supports deployment on heterogeneous infrastructures.
-%
-    By integrating advances in aggregate programming frameworks such as Collektive,
-    the COS aims to offer a robust, adaptive,
-    and general-purpose environment for programming Collective Adaptive Systems.
-%
-    The expected contribution is a novel paradigm bridging aggregate computing and distributed operating system principles,
-    enabling more powerful, flexible,
-    and reliable collective applications in domains such as crowd management, autonomous navigation, and smart cities.
+    \subsection*{Opportunities and Challenges}
 
-    \section*{Opportunities and Challenges}
+    The integration of \acp{clf} and \acp{cbf} into the \ac{ac} framework represents a significant opportunity to enhance the reliability of these systems.
 
+    The primary opportunity lies in formalizing the ``transient behavior'' of collective systems.
+    %
+    While \ac{ac} provides powerful abstractions for defining \emph{what} the collective state should be (e.g., a spatial pattern),
+    Control Theory provides the mathematical tools to certify \textit{how} the system moves toward that state.
+    %
+    By embedding \acp{clf} (for stability) and \acp{cbf} (for safety) into the execution model,
+    it becomes possible to transform the middleware from a system that merely executes instructions into one that guarantees safety.
+    %
+    This is crucial for a Collective OS that aims to manage physical space and safety margins as critical resources.
 
+    While the integration of \acp{clf} and \acp{cbf} into \ac{ac} opens new opportunities,
+    it also presents several challenges that need to be taken into account:
+    \begin{itemize}
+        \item The ``Local vs. Global'': \ac{ac} operates on collective logic, but safety constraints (like collision avoidance)
+            must be enforced locally on device actuators.
+            Translating a global safety directive into local barrier functions without centralized control presents a significant theoretical hurdle.
+        \item Computational Constraints: The proposed integration requires solving a Quadratic Program (QP) at every control cycle on each device.
+            This introduces computational overhead that challenges the lightweight nature typically desired in pervasive computing.
+    \end{itemize}
 
     \subsection*{Research Gap}
+    The current state of the art in \acl{ac} excels at \emph{resilience} and \emph{eventual} consistency~\cite{TOMACS2018}.
+    %
+    Mechanisms such as self-stabilizing algorithms are being developed to recover from transient faults and network topology changes.
+    %
+    However,
+    these approaches generally guarantee that the system will \emph{eventually} converge to a correct state,
+    without providing guarantees about the system's behavior \emph{during} the convergence phase.
+
+    In safety-critical contexts, such as multi-robot missions, ``eventual'' correctness is not sufficient.
+    %
+    If a formation breaks,
+    robots might collide or disconnect while reorganizing.
+    %
+    There is currently a lack of mechanisms within the \ac{ac} paradigm that can strictly enforce safety constraints during the transient phase of self-organization.
+    %
+    This research aims to fill that gap by integrating the fast convergence of \ac{clf} and the safety guarantees of \ac{cbf} directly into the aggregate programming model.
 
     \subsection*{Research Plan}
-
+    The research is expected to involve:
+    \begin{itemize}
+        \item Investigation of integrating \ac{clf} and \ac{cbf} into the \ac{ac} theoretical model,
+            specifically by mapping aggregate computational fields to Lyapunov candidates for stability and defining barrier functions for forward invariance;
+        \item Specification of safety-critical requirements at the single-device level,
+            utilizing local optimization techniques to enforce actuator constraints while pursuing global goals defined at the collective level;
+        \item Specification of safety-critical requirements directly at the collective level,
+            enabling the declarative expression of global constraints, such as connectivity maintenance or geofencing,
+            that are automatically translated into local barriers;
+        \item Validation on safety-critical use cases, such as multi-robot systems, to demonstrate that the integrated approach guarantees safety during transient adaptation phases, ensuring the system remains safe distinct from the property of eventual consistency.
+    \end{itemize}
 
     \bibliographystyle{alpha}
     \bibliography{bibliography}
