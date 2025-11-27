@@ -17,3 +17,4 @@ _minted*/
 *.vrb
 build/
 out/
+.DS_Store
